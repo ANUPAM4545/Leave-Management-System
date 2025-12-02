@@ -1,14 +1,14 @@
 # Leave Management System - Quick Reference
 
-## 📋 Project Overview
+##  Project Overview
 
 A full-stack Leave Management System with role-based access control, audit trails, email notifications, and webhook integration.
 
 **Tech Stack:** Django REST Framework + React + SQLite
 
----
 
-## 🚀 Quick Start
+
+##  Quick Start
 
 ### Backend Setup
 ```bash
@@ -33,7 +33,7 @@ npm run dev
 
 ---
 
-## 👥 User Roles
+##  User Roles
 
 | Role | Permissions |
 |------|-------------|
@@ -43,9 +43,9 @@ npm run dev
 
 ---
 
-## 🎯 Key Features
+##  Key Features
 
-### ✅ Implemented Features
+###  Implemented Features
 1. **Authentication** - JWT-based with django-allauth
 2. **Authorization** - Role-based + object-level (django-guardian)
 3. **Leave Management** - Create, approve, reject workflows
@@ -56,7 +56,7 @@ npm run dev
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 lms-project/
@@ -78,7 +78,7 @@ lms-project/
 
 ---
 
-## 🔑 Core Models
+##  Core Models
 
 ### Backend Models
 - **CustomUser** - User with role (EMPLOYEE/MANAGER/HR)
@@ -90,7 +90,7 @@ lms-project/
 
 ---
 
-## 🌐 API Endpoints
+##  API Endpoints
 
 ### Authentication
 ```
@@ -114,7 +114,7 @@ GET /api/manager-stats/      # Dashboard stats
 
 ---
 
-## 🔄 Workflows
+##  Workflows
 
 ### Leave Creation
 1. Employee fills form → POST /api/leaves/
@@ -130,9 +130,9 @@ GET /api/manager-stats/      # Dashboard stats
 4. Email sent to employee
 5. Webhook triggered
 
----
 
-## 🛠️ Technology Details
+
+##  Technology Details
 
 ### Backend
 - **Django 5.2.8** - Web framework
@@ -151,7 +151,7 @@ GET /api/manager-stats/      # Dashboard stats
 
 ---
 
-## 📧 Email Notifications
+##  Email Notifications
 
 **Development:** Console backend (prints to terminal)
 **Production:** Configure SMTP in settings.py
@@ -163,7 +163,7 @@ GET /api/manager-stats/      # Dashboard stats
 
 ---
 
-## 🔗 Webhooks
+##  Webhooks
 
 **Setup:**
 1. Create webhook in Django admin
@@ -187,7 +187,7 @@ GET /api/manager-stats/      # Dashboard stats
 
 ---
 
-## 🧪 Testing
+##  Testing
 
 **Run Tests:**
 ```bash
@@ -205,7 +205,7 @@ python3 manage.py test
 
 ---
 
-## 📊 Database Schema
+##  Database Schema
 
 ```
 CustomUser
@@ -233,7 +233,7 @@ Webhook
 
 ---
 
-## 🎨 Frontend Pages
+##  Frontend Pages
 
 | Page | Route | Role | Description |
 |------|-------|------|-------------|
@@ -247,19 +247,19 @@ Webhook
 
 ---
 
-## 🔐 Security Features
+##  Security Features
 
-- ✅ JWT authentication
-- ✅ Role-based access control
-- ✅ Object-level permissions
-- ✅ CSRF protection
-- ✅ CORS configuration
-- ✅ HMAC webhook signing
-- ✅ Password hashing (Django default)
+-  JWT authentication
+-  Role-based access control
+-  Object-level permissions
+-  CSRF protection
+-  CORS configuration
+-  HMAC webhook signing
+-  Password hashing (Django default)
 
 ---
 
-## 📝 Environment Variables
+##  Environment Variables
 
 **Development:** No .env needed (uses defaults)
 
@@ -274,9 +274,9 @@ EMAIL_HOST_USER=your-email@gmail.com
 EMAIL_HOST_PASSWORD=your-app-password
 ```
 
----
 
-## 🐛 Common Issues & Solutions
+
+##  Common Issues & Solutions
 
 ### Issue: "Module not found"
 **Solution:** Install dependencies
@@ -299,7 +299,7 @@ pkill -f runserver
 
 ---
 
-## 📚 Documentation Files
+##  Documentation Files
 
 - **TECHNICAL_DOCUMENTATION.md** - Complete technical guide (2000+ lines)
 - **README.md** - This file (quick reference)
@@ -307,36 +307,36 @@ pkill -f runserver
 
 ---
 
-## 🎯 Evaluation Points
+##  Evaluation Points
 
 ### Backend
-✅ Django models with relationships
-✅ REST API with DRF
-✅ JWT authentication
-✅ Role-based permissions
-✅ Audit trail implementation
-✅ Email notifications
-✅ Webhook delivery system
-✅ Comprehensive tests (16 tests)
+ - Django models with relationships
+ - REST API with DRF
+ - JWT authentication
+ -  Role-based permissions
+ - Audit trail implementation
+ - Email notifications
+ - Webhook delivery system
+ -  Comprehensive tests (16 tests)
 
 ### Frontend
-✅ React components
-✅ Context API for state
-✅ Protected routes
-✅ API integration
-✅ Responsive design
-✅ Dark mode support
+ React components
+ Context API for state
+ Protected routes
+ API integration
+ Responsive design
+ Dark mode support
 
 ### Features
-✅ Complete CRUD operations
-✅ Approval workflow
-✅ Real-time notifications
-✅ External integrations (webhooks)
-✅ Security best practices
+ Complete CRUD operations
+ Approval workflow
+ Real-time notifications
+ External integrations (webhooks)
+ Security best practices
 
----
 
-## 🚢 Deployment Checklistc
+
+##  Deployment Checklistc
 
 - [ ] Set DEBUG=False
 - [ ] Configure SECRET_KEY
@@ -350,9 +350,9 @@ pkill -f runserver
 - [ ] Configure Nginx
 - [ ] Enable HTTPS
 
----
 
-## 📞 Support
+
+##  Support
 
 For detailed documentation, see **TECHNICAL_DOCUMENTATION.md**
 
@@ -360,13 +360,12 @@ For detailed documentation, see **TECHNICAL_DOCUMENTATION.md**
 - Username: `testemployee` / Password: `test123` (Employee)
 - Username: `testmanager` / Password: `test123` (Manager)
 
----
 
-## 📄 License
+
+##  License
 
 This project is for educational purposes.
 
----
 
 **Last Updated:** December 2025
 **Version:** 1.0.0
