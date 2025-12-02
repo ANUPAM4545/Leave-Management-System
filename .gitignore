@@ -38,6 +38,8 @@ venv/
 .venv/
 env/
 .env
+.env.local
+.env.production.local
 
 # Node.js / Frontend
 node_modules/

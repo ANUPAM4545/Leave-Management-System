@@ -1,4 +1,5 @@
-const API_URL = 'http://127.0.0.1:8000/api';
+// Use environment variable for API URL, fallback to localhost for development
+const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api';
 
 export const getAuthHeaders = () => {
     const token = localStorage.getItem('access_token');
