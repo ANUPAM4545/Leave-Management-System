@@ -122,12 +122,16 @@ class EmployeeStatsView(APIView):
         total_allowance = getattr(user, 'annual_leave_allowance', 24)
         
         # Calculate used leaves (approved leaves only)
-        used_leaves = LeaveRequest.objects.filter(
+        approved_leaves = LeaveRequest.objects.filter(
             user=user,
             status='APPROVED'
-        ).aggregate(
-            total=Sum('days_requested')
-        )['total'] or 0
+        )
+        
+        used_leaves = 0
+        for leave in approved_leaves:
+            # Calculate days between start_date and end_date (inclusive)
+            days = (leave.end_date - leave.start_date).days + 1
+            used_leaves += days
         
         # Count pending requests
         pending_requests = LeaveRequest.objects.filter(
@@ -145,12 +149,14 @@ class EmployeeStatsView(APIView):
         
         recent_activity = []
         for leave in recent_leaves:
+            # Calculate days for this leave
+            days = (leave.end_date - leave.start_date).days + 1
             recent_activity.append({
                 'id': leave.id,
                 'leave_type': leave.leave_type.name if leave.leave_type else 'N/A',
                 'start_date': leave.start_date,
                 'end_date': leave.end_date,
-                'days': leave.days_requested,
+                'days': days,
                 'status': leave.status,
                 'created_at': leave.created_at
             })
@@ -162,6 +168,7 @@ class EmployeeStatsView(APIView):
             'pending_requests': pending_requests,
             'recent_activity': recent_activity
         })
+
 
 
 class ManagerStatsView(APIView):
