@@ -1,12 +1,23 @@
-import Navbar from './Navbar';
+import { useState } from 'react';
+import Sidebar from './Sidebar';
 
-export default function Layout({ children }) {
+const Layout = ({ children }) => {
+    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+    const toggleSidebar = () => {
+        setIsSidebarCollapsed(!isSidebarCollapsed);
+    };
+
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-            <Navbar />
-            <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-                {children}
+        <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
+            <Sidebar isCollapsed={isSidebarCollapsed} toggleSidebar={toggleSidebar} />
+            <main className="flex-1 overflow-x-hidden overflow-y-auto transition-all duration-300">
+                <div className="container mx-auto px-6 py-8">
+                    {children}
+                </div>
             </main>
         </div>
     );
-}
+};
+
+export default Layout;

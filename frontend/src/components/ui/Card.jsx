@@ -1,13 +1,17 @@
-export default function Card({ children, title, subtitle, className = '' }) {
+import React from 'react';
+
+const Card = ({ children, className = '', title, action }) => {
     return (
-        <div className={`bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-6 border border-gray-100 dark:border-gray-700 transition-all duration-200 ${className}`}>
-            {(title || subtitle) && (
-                <div className="mb-4">
+        <div className={`bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 ${className}`}>
+            {(title || action) && (
+                <div className="flex justify-between items-center mb-4">
                     {title && <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h3>}
-                    {subtitle && <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{subtitle}</p>}
+                    {action && <div>{action}</div>}
                 </div>
             )}
             {children}
         </div>
     );
-}
+};
+
+export default Card;

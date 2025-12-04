@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import Layout from '../components/Layout';
-import Badge from '../components/Badge';
+import Badge from '../components/ui/Badge';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import ActionModal from '../components/ActionModal';
@@ -109,7 +109,11 @@ export default function ManagerQueue() {
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{request.leave_type.name}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{request.start_date} to {request.end_date}</td>
                                     <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400 max-w-xs truncate" title={request.reason}>{request.reason}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap"><Badge status={request.status} /></td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <Badge variant={request.status === 'APPROVED' ? 'success' : request.status === 'REJECTED' ? 'danger' : 'warning'}>
+                                            {request.status}
+                                        </Badge>
+                                    </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                                         {request.status === 'PENDING' && (
                                             <>

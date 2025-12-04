@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
-import Badge from '../components/Badge';
+import Badge from '../components/ui/Badge';
 import Card from '../components/ui/Card';
 import { api } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
@@ -45,7 +45,11 @@ export default function HRDashboard() {
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{leave.leave_type.name}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{leave.start_date} to {leave.end_date}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap"><Badge status={leave.status} /></td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <Badge variant={leave.status === 'APPROVED' ? 'success' : leave.status === 'REJECTED' ? 'danger' : 'warning'}>
+                                            {leave.status}
+                                        </Badge>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>

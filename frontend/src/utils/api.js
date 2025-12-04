@@ -1,11 +1,23 @@
 // Use environment variable for API URL, fallback to localhost for development
 const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api';
 
+/**
+ * Helper to attach JWT token to requests.
+ * This ensures all protected endpoints receive the 'Authorization' header.
+ */
 export const getAuthHeaders = () => {
     const token = localStorage.getItem('access_token');
     return token ? { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' } : { 'Content-Type': 'application/json' };
 };
 
+/**
+ * Centralized API Client
+ * 
+ * All backend communication happens here. This makes it easy to:
+ * - Manage endpoints in one place.
+ * - Handle errors consistently.
+ * - Mock API calls for testing.
+ */
 export const api = {
     login: async (username, password) => {
         const response = await fetch(`${API_URL}/auth/token/`, {

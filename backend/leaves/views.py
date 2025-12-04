@@ -6,10 +6,22 @@ from .models import LeaveRequest, LeaveType, LeaveAuditLog
 from .serializers import LeaveRequestSerializer, LeaveTypeSerializer
 
 class LeaveViewSet(viewsets.ModelViewSet):
+    """
+    API ViewSet for managing Leave Requests.
+    
+    Provides standard CRUD operations plus a custom action for approval/rejection.
+    Access control is handled via permission_classes and get_queryset.
+    """
     serializer_class = LeaveRequestSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
+        """
+        Filter leaves based on user role:
+        - HR: Can see ALL leaves.
+        - MANAGER: Can see ALL leaves when viewing details or performing actions.
+        - EMPLOYEE: Can only see their OWN leaves.
+        """
         user = self.request.user
         if user.role == 'HR':
             return LeaveRequest.objects.all()
@@ -19,6 +31,13 @@ class LeaveViewSet(viewsets.ModelViewSet):
         return LeaveRequest.objects.filter(user=user)
 
     def perform_create(self, serializer):
+        """
+        Custom create logic to handle side effects:
+        1. Set the user to the current logged-in user.
+        2. Create an initial Audit Log entry.
+        3. Trigger Email Notifications.
+        4. Trigger Webhooks.
+        """
         leave = serializer.save(user=self.request.user)
         # Create audit log for creation
         LeaveAuditLog.objects.create(
@@ -39,11 +58,17 @@ class LeaveViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'])
     def action(self, request, pk=None):
+        """
+        Custom endpoint for Managers/HR to Approve or Reject a leave.
+        URL: POST /api/leaves/{id}/action/
+        Body: { "action": "approve" | "reject", "comment": "..." }
+        """
         leave = self.get_object()
         action_type = request.data.get('action')
         comment = request.data.get('comment', '')
         previous_status = leave.status
 
+        # Only Managers and HR can perform actions
         if request.user.role not in ['MANAGER', 'HR']:
              return Response({'error': 'Not authorized'}, status=status.HTTP_403_FORBIDDEN)
 
@@ -83,6 +108,10 @@ from django.utils import timezone
 from django.db.models import Count, Q
 
 class ManagerStatsView(APIView):
+    """
+    Dashboard statistics for Managers.
+    Returns counts of Pending, Approved (Today), and Rejected leaves.
+    """
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
@@ -91,6 +120,7 @@ class ManagerStatsView(APIView):
         
         today = timezone.now().date()
         
+        # Aggregate queries for efficiency
         stats = LeaveRequest.objects.aggregate(
             pending=Count('id', filter=Q(status='PENDING')),
             approved_today=Count('id', filter=Q(status='APPROVED', updated_at__date=today)),

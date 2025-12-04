@@ -3,6 +3,15 @@ import { api } from '../utils/api';
 
 const AuthContext = createContext(null);
 
+/**
+ * AuthProvider Component
+ * 
+ * Manages the global authentication state of the application.
+ * It handles:
+ * 1. Checking for existing tokens on app load (persistence).
+ * 2. Storing user data and tokens in state/localStorage.
+ * 3. Providing login/logout methods to all child components.
+ */
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);

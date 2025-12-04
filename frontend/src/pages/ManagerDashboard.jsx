@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Layout from '../components/Layout';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
-import Badge from '../components/Badge';
+import Badge from '../components/ui/Badge';
 import ManagerStats from '../components/ManagerStats';
 import ActionModal from '../components/ActionModal';
 import { api } from '../utils/api';
@@ -87,8 +87,8 @@ export default function ManagerDashboard() {
                                         key={tab}
                                         onClick={() => setActiveTab(tab)}
                                         className={`px-3 py-1 text-xs font-medium rounded-md transition-colors duration-200 ${activeTab === tab
-                                                ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
-                                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
+                                            ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
+                                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
                                             }`}
                                     >
                                         {tab.charAt(0) + tab.slice(1).toLowerCase()}
@@ -133,7 +133,9 @@ export default function ManagerDashboard() {
                                                             </Button>
                                                         </>
                                                     ) : (
-                                                        <Badge status={request.status} />
+                                                        <Badge variant={request.status === 'APPROVED' ? 'success' : 'danger'}>
+                                                            {request.status}
+                                                        </Badge>
                                                     )}
                                                 </div>
                                             </div>

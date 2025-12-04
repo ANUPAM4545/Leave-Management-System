@@ -2,6 +2,12 @@ from django.core.mail import send_mail
 from django.conf import settings
 from .models import Notification
 
+"""
+Utility functions for sending email notifications.
+These functions decouple the email sending logic from the views,
+making the code cleaner and easier to test.
+"""
+
 def send_leave_created_notification(leave_request):
     """Send notification when a new leave request is created."""
     # Notify the employee

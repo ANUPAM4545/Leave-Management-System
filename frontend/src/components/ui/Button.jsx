@@ -1,17 +1,36 @@
-export default function Button({ children, variant = 'primary', isLoading, className = '', ...props }) {
-    const baseStyles = "inline-flex items-center px-4 py-2 border text-sm font-medium rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed";
+import React from 'react';
 
-    const variants = {
-        primary: "border-transparent text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-600",
-        secondary: "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:ring-indigo-500",
-        danger: "border-transparent text-white bg-red-600 hover:bg-red-700 focus:ring-red-500 dark:bg-red-500 dark:hover:bg-red-600",
-        ghost: "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-gray-500"
-    };
+const variants = {
+    primary: 'bg-brand-600 hover:bg-brand-700 text-white shadow-sm shadow-brand-500/30',
+    secondary: 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700',
+    danger: 'bg-rose-600 hover:bg-rose-700 text-white shadow-sm shadow-rose-500/30',
+    ghost: 'bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400',
+};
 
+const sizes = {
+    sm: 'px-3 py-1.5 text-sm',
+    md: 'px-4 py-2 text-sm',
+    lg: 'px-6 py-3 text-base',
+};
+
+const Button = ({
+    children,
+    variant = 'primary',
+    size = 'md',
+    className = '',
+    isLoading = false,
+    disabled = false,
+    ...props
+}) => {
     return (
         <button
-            className={`${baseStyles} ${variants[variant]} ${className}`}
-            disabled={isLoading}
+            className={`
+                inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 disabled:opacity-50 disabled:cursor-not-allowed
+                ${variants[variant]}
+                ${sizes[size]}
+                ${className}
+            `}
+            disabled={disabled || isLoading}
             {...props}
         >
             {isLoading && (
@@ -23,4 +42,6 @@ export default function Button({ children, variant = 'primary', isLoading, class
             {children}
         </button>
     );
-}
+};
+
+export default Button;

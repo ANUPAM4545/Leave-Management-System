@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
-import Badge from '../components/Badge';
+import Badge from '../components/ui/Badge';
 import Card from '../components/ui/Card';
 import { api } from '../utils/api';
 
@@ -36,7 +36,11 @@ export default function MyRequests() {
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">{request.leave_type.name}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{request.start_date} to {request.end_date}</td>
                                     <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400 max-w-xs truncate">{request.reason}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap"><Badge status={request.status} /></td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <Badge variant={request.status === 'APPROVED' ? 'success' : request.status === 'REJECTED' ? 'danger' : 'warning'}>
+                                            {request.status}
+                                        </Badge>
+                                    </td>
                                     <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{request.manager_comment || '-'}</td>
                                 </tr>
                             ))}
