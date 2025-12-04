@@ -104,8 +104,65 @@ class LeaveViewSet(viewsets.ModelViewSet):
 
         return Response(LeaveRequestSerializer(leave).data)
 
+
 from django.utils import timezone
-from django.db.models import Count, Q
+from django.db.models import Count, Q, Sum
+
+class EmployeeStatsView(APIView):
+    """
+    Dashboard statistics for Employees.
+    Returns total allowance, used leaves, available balance, and pending requests.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        
+        # Get total allowance from user model (default 24 if not set)
+        total_allowance = getattr(user, 'annual_leave_allowance', 24)
+        
+        # Calculate used leaves (approved leaves only)
+        used_leaves = LeaveRequest.objects.filter(
+            user=user,
+            status='APPROVED'
+        ).aggregate(
+            total=Sum('days_requested')
+        )['total'] or 0
+        
+        # Count pending requests
+        pending_requests = LeaveRequest.objects.filter(
+            user=user,
+            status='PENDING'
+        ).count()
+        
+        # Calculate available balance
+        available_balance = total_allowance - used_leaves
+        
+        # Get recent activity (last 5 leave requests)
+        recent_leaves = LeaveRequest.objects.filter(
+            user=user
+        ).order_by('-created_at')[:5]
+        
+        recent_activity = []
+        for leave in recent_leaves:
+            recent_activity.append({
+                'id': leave.id,
+                'leave_type': leave.leave_type.name if leave.leave_type else 'N/A',
+                'start_date': leave.start_date,
+                'end_date': leave.end_date,
+                'days': leave.days_requested,
+                'status': leave.status,
+                'created_at': leave.created_at
+            })
+        
+        return Response({
+            'total_allowance': total_allowance,
+            'used_leaves': used_leaves,
+            'available_balance': available_balance,
+            'pending_requests': pending_requests,
+            'recent_activity': recent_activity
+        })
+
 
 class ManagerStatsView(APIView):
     """

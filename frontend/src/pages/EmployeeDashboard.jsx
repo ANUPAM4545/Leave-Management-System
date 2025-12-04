@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
@@ -11,22 +12,95 @@ import {
     XCircleIcon
 } from '@heroicons/react/24/outline';
 import { useAuth } from '../context/AuthContext';
+import { api } from '../utils/api';
 
 export default function EmployeeDashboard() {
     const { user } = useAuth();
+    const [stats, setStats] = useState({
+        total_allowance: 24,
+        used_leaves: 0,
+        pending_requests: 0,
+        available_balance: 24
+    });
+    const [recentActivity, setRecentActivity] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     // Get display name
     const displayName = user?.first_name && user?.last_name
         ? `${user.first_name} ${user.last_name}`
         : user?.first_name || user?.username || 'User';
 
-    // Mock data for the advanced dashboard (in a real app, this would come from an API)
-    const stats = {
-        total: 24,
-        used: 12,
-        pending: 2,
-        available: 10
+    // Fetch dashboard stats
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                setLoading(true);
+                const data = await api.getEmployeeStats();
+                setStats({
+                    total_allowance: data.total_allowance,
+                    used_leaves: data.used_leaves,
+                    pending_requests: data.pending_requests,
+                    available_balance: data.available_balance
+                });
+                setRecentActivity(data.recent_activity || []);
+            } catch (error) {
+                console.error('Error fetching dashboard stats:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchStats();
+    }, []);
+
+    // Format date for display
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     };
+
+    // Get status badge color
+    const getStatusColor = (status) => {
+        switch (status) {
+            case 'APPROVED':
+                return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300';
+            case 'REJECTED':
+                return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300';
+            case 'PENDING':
+                return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300';
+            default:
+                return 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300';
+        }
+    };
+
+    // Get status icon
+    const getStatusIcon = (status) => {
+        switch (status) {
+            case 'APPROVED':
+                return <CheckCircleIcon className="w-5 h-5" />;
+            case 'REJECTED':
+                return <XCircleIcon className="w-5 h-5" />;
+            case 'PENDING':
+                return <ClockIcon className="w-5 h-5" />;
+            default:
+                return <ClockIcon className="w-5 h-5" />;
+        }
+    };
+
+    // Get status icon background color
+    const getStatusIconBg = (status) => {
+        switch (status) {
+            case 'APPROVED':
+                return 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400';
+            case 'REJECTED':
+                return 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400';
+            case 'PENDING':
+                return 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400';
+            default:
+                return 'bg-gray-100 dark:bg-gray-900/30 text-gray-600 dark:text-gray-400';
+        }
+    };
+
 
     return (
         <Layout>
@@ -38,7 +112,7 @@ export default function EmployeeDashboard() {
                             Welcome back, {displayName}! 👋
                         </h2>
                         <p className="mt-2 text-indigo-100 text-lg max-w-2xl">
-                            You have <span className="font-bold text-white">{stats.available} days</span> of leave remaining this year.
+                            You have <span className="font-bold text-white">{stats.available_balance} days</span> of leave remaining this year.
                             Plan your time off effectively.
                         </p>
                         <div className="mt-6 flex flex-wrap gap-4">
@@ -67,7 +141,7 @@ export default function EmployeeDashboard() {
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Available Balance</p>
-                                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{stats.available}</p>
+                                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{stats.available_balance}</p>
                             </div>
                             <div className="p-3 bg-emerald-100 dark:bg-emerald-900/30 rounded-full text-emerald-600 dark:text-emerald-400">
                                 <CalendarDaysIcon className="w-6 h-6" />
@@ -79,7 +153,7 @@ export default function EmployeeDashboard() {
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Allowance</p>
-                                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{stats.total}</p>
+                                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{stats.total_allowance}</p>
                             </div>
                             <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-full text-blue-600 dark:text-blue-400">
                                 <CheckCircleIcon className="w-6 h-6" />
@@ -91,7 +165,7 @@ export default function EmployeeDashboard() {
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Used Leaves</p>
-                                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{stats.used}</p>
+                                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{stats.used_leaves}</p>
                             </div>
                             <div className="p-3 bg-amber-100 dark:bg-amber-900/30 rounded-full text-amber-600 dark:text-amber-400">
                                 <ClockIcon className="w-6 h-6" />
@@ -103,7 +177,7 @@ export default function EmployeeDashboard() {
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Pending Requests</p>
-                                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{stats.pending}</p>
+                                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{stats.pending_requests}</p>
                             </div>
                             <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-full text-purple-600 dark:text-purple-400">
                                 <ListBulletIcon className="w-6 h-6" />
@@ -118,37 +192,34 @@ export default function EmployeeDashboard() {
                     <div className="lg:col-span-2">
                         <Card title="Recent Activity" className="h-full">
                             <div className="mt-4 space-y-4">
-                                {/* Mock Data Item 1 */}
-                                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-100 dark:border-gray-700">
-                                    <div className="flex items-center space-x-4">
-                                        <div className="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg text-yellow-600 dark:text-yellow-400">
-                                            <ClockIcon className="w-5 h-5" />
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-medium text-gray-900 dark:text-white">Sick Leave</p>
-                                            <p className="text-xs text-gray-500 dark:text-gray-400">Nov 28 - Nov 29 (2 days)</p>
-                                        </div>
+                                {loading ? (
+                                    <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                                        Loading...
                                     </div>
-                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300">
-                                        Pending
-                                    </span>
-                                </div>
-
-                                {/* Mock Data Item 2 */}
-                                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-100 dark:border-gray-700">
-                                    <div className="flex items-center space-x-4">
-                                        <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg text-green-600 dark:text-green-400">
-                                            <CheckCircleIcon className="w-5 h-5" />
+                                ) : recentActivity.length > 0 ? (
+                                    recentActivity.map((activity) => (
+                                        <div key={activity.id} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-100 dark:border-gray-700">
+                                            <div className="flex items-center space-x-4">
+                                                <div className={`p-2 rounded-lg ${getStatusIconBg(activity.status)}`}>
+                                                    {getStatusIcon(activity.status)}
+                                                </div>
+                                                <div>
+                                                    <p className="text-sm font-medium text-gray-900 dark:text-white">{activity.leave_type}</p>
+                                                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                        {formatDate(activity.start_date)} - {formatDate(activity.end_date)} ({activity.days} {activity.days === 1 ? 'day' : 'days'})
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(activity.status)}`}>
+                                                {activity.status.charAt(0) + activity.status.slice(1).toLowerCase()}
+                                            </span>
                                         </div>
-                                        <div>
-                                            <p className="text-sm font-medium text-gray-900 dark:text-white">Annual Leave</p>
-                                            <p className="text-xs text-gray-500 dark:text-gray-400">Oct 15 - Oct 20 (5 days)</p>
-                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                                        No recent activity
                                     </div>
-                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">
-                                        Approved
-                                    </span>
-                                </div>
+                                )}
                             </div>
                             <div className="mt-6">
                                 <Link to="/my-requests" className="text-sm font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 flex items-center">

@@ -58,6 +58,12 @@ export const api = {
         if (!response.ok) throw new Error('Failed to create leave');
         return response.json();
     },
+    // Employee Dashboard Stats
+    getEmployeeStats: async () => {
+        const response = await fetch(`${API_URL}/employee-stats/`, { headers: getAuthHeaders() });
+        if (!response.ok) throw new Error('Failed to fetch employee stats');
+        return response.json();
+    },
     // Manager
     getManagerQueue: async (status = 'PENDING') => {
         const query = status === 'ALL' ? '?all=true' : `?status=${status}`;
