@@ -1,377 +1,254 @@
-# Leave Management System - Quick Reference
+🌟 Leave Management System (LMS)
 
-##  Project Overview
+A full-stack role-based Leave Management System built with Django REST + React.
 
-A full-stack Leave Management System with role-based access control, audit trails, email notifications, and webhook integration.
+<p align="center">
+  <img src="https://img.shields.io/badge/Frontend-React-blue?style=flat-square" />
+  <img src="https://img.shields.io/badge/Backend-Django%20REST%20Framework-green?style=flat-square" />
+  <img src="https://img.shields.io/badge/Database-SQLite-lightgrey?style=flat-square" />
+  <img src="https://img.shields.io/badge/Tests-100%25%20Passing-brightgreen?style=flat-square" />
+</p>
 
-**Tech Stack:** Django REST Framework + React + SQLite
 
 
+⸻
 
-##  How to Run the Servers
+🚀 1. Project Overview
 
-You need to open **Two Separate Terminals** to run this project.
+The Leave Management System is a full-stack application featuring:
+	1.	Role-Based Access Control
+	2.	JWT Authentication
+	3.	Leave Request + Approval System
+	4.	Audit Logs for tracking changes
+	5.	Email Notifications
+	6.	Webhook Delivery System with HMAC security
+	7.	16 Automated Backend Tests (all passing)
 
-### 1. Start the Backend (Django)
-This runs on port `8000`.
+⸻
 
-```bash
+📁 2. Project Structure
+
+lms-project/
+├── backend/
+│   ├── config/
+│   ├── users/
+│   ├── leaves/
+│   ├── notifications/
+│   └── db.sqlite3
+│
+└── frontend/
+    ├── src/
+    │   ├── api/
+    │   ├── components/
+    │   ├── context/
+    │   └── pages/
+    └── package.json
+
+
+⸻
+
+🖥️ 3. How to Run the Project
+
+🟩 3.1 Backend (Django) — Port 8000
+
 cd lms-project/backend
 pip install -r requirements.txt
+python3 manage.py migrate
 python3 manage.py createsuperuser
 python3 manage.py runserver
-```
 
-### 2. Start the Frontend (React)
-This runs on port `5173`.
+🟦 3.2 Frontend (React + Vite) — Port 5173
 
-```bash
 cd lms-project/frontend
+npm install
 npm run dev
-```
-
-### 3. Access the Project
-- **Main App**: [http://localhost:5173/](http://localhost:5173/)
-- **Backend API**: [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
-- **Admin Panel**: [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/)
-
----
-
-##  User Roles
-
-| Role | Permissions |
-|------|-------------|
-| **Employee** | Create leave requests, view own leaves |
-| **Manager** | Approve/reject leaves, view all leaves |
-| **HR** | View all leaves, manage leave types |
-
----
-
-##  Key Features
-
-###  Implemented Features
-1. **Authentication** - JWT-based with django-allauth
-2. **Authorization** - Role-based + object-level (django-guardian)
-3. **Leave Management** - Create, approve, reject workflows
-4. **Audit Trails** - Complete history of all changes
-5. **Email Notifications** - Automated emails on events
-6. **Webhooks** - HMAC-signed HTTP callbacks
-7. **Testing** - 16 automated tests (100% passing)
-
----
-
-##  Project Structure
-
-```
-lms-project/
-├── backend/                 # Django REST API
-│   ├── config/             # Settings, URLs
-│   ├── users/              # User management
-│   ├── leaves/             # Leave logic
-│   ├── notifications/      # Emails & webhooks
-│   └── db.sqlite3          # Database
-│
-└── frontend/               # React UI
-    ├── src/
-    │   ├── api/           # API client
-    │   ├── components/    # Reusable components
-    │   ├── context/       # State management
-    │   └── pages/         # Page components
-    └── package.json
-```
-
----
-
-##  Core Models
-
-### Backend Models
-- **CustomUser** - User with role (EMPLOYEE/MANAGER/HR)
-- **LeaveType** - Leave categories (Sick, Casual, etc.)
-- **LeaveRequest** - Leave applications
-- **LeaveAuditLog** - Change history
-- **Webhook** - Webhook configuration
-- **WebhookDelivery** - Delivery tracking
-
----
-
-##  API Endpoints
-
-### Authentication
-```
-POST /api/auth/register/     # Register user
-POST /api/auth/token/        # Login (get JWT)
-GET  /api/auth/me/           # Get current user
-```
-
-### Leaves
-```
-GET    /api/leaves/          # List leaves
-POST   /api/leaves/          # Create leave
-POST   /api/leaves/{id}/action/  # Approve/reject
-```
-
-### Manager
-```
-GET /api/manager-queue/      # Pending leaves
-GET /api/manager-stats/      # Dashboard stats
-```
-
----
-
-##  Workflows
-
-### Leave Creation
-1. Employee fills form → POST /api/leaves/
-2. Backend creates LeaveRequest
-3. Audit log created
-4. Email sent to employee + managers
-5. Webhook triggered (if configured)
-
-### Leave Approval
-1. Manager clicks Approve → POST /api/leaves/{id}/action/
-2. Status updated to APPROVED
-3. Audit log created
-4. Email sent to employee
-5. Webhook triggered
 
 
+⸻
 
-##  Technology Details
+🌐 4. Access URLs
 
-### Backend
-- **Django 5.2.8** - Web framework
-- **Django REST Framework** - API
-- **djangorestframework-simplejwt** - JWT auth
-- **django-allauth** - Email verification, password reset
-- **django-guardian** - Object-level permissions
-- **SQLite** - Database
+Service	URL
+Frontend App	http://localhost:5173/
+Backend API	http://127.0.0.1:8000/
+Admin Panel	http://127.0.0.1:8000/admin/
 
-### Frontend
-- **React 18** - UI library
-- **Vite** - Build tool
-- **Tailwind CSS** - Styling
-- **Axios** - HTTP client
-- **React Router** - Routing
 
----
+⸻
 
-##  Email Notifications
+👥 5. User Roles
 
-**Development:** Console backend (prints to terminal)
-**Production:** Configure SMTP in settings.py
+Role	Permissions
+Employee	Create & view personal leaves
+Manager	Approve or reject leaves
+HR	Manage leave categories & view all leaves
 
-**Events:**
-- Leave created → Employee + Managers
-- Leave approved → Employee
-- Leave rejected → Employee
 
----
+⸻
 
-##  Webhooks
+⚙️ 6. Features
 
-**Setup:**
-1. Create webhook in Django admin
-2. Set URL and secret key
-3. Subscribe to events (leave_created, leave_approved, leave_rejected)
+🔒 6.1 Authentication
+	1.	JWT-based login
+	2.	Email verification
+	3.	Password reset flow
 
-**Security:** HMAC SHA256 signature in `X-Webhook-Signature` header
+📝 6.2 Leave Workflow
+	1.	Apply for leave
+	2.	Manager approval or rejection
+	3.	Status updates
+	4.	History tracking
 
-**Payload Example:**
-```json
-{
-  "event": "leave_approved",
-  "timestamp": "2025-12-01T12:00:00Z",
-  "data": {
-    "leave_id": 5,
-    "employee": {...},
-    "status": "APPROVED"
-  }
-}
-```
+📧 6.3 Notifications
+	1.	Email for leave created
+	2.	Email for leave approved
+	3.	Email for leave rejected
 
----
+🔔 6.4 Webhooks
+	1.	HMAC SHA256 signed payload
+	2.	Delivery logs
+	3.	Event triggers (created, approved, rejected)
 
-##  Testing
+🗂️ 6.5 Security
+	1.	JWT
+	2.	CORS configuration
+	3.	Password hashing
+	4.	Object-level permissions
 
-**Run Tests:**
-```bash
+⸻
+
+🔌 7. API Endpoints
+
+7.1 Auth
+
+POST /api/auth/register/
+POST /api/auth/token/
+GET  /api/auth/me/
+
+7.2 Leaves
+
+GET    /api/leaves/
+POST   /api/leaves/
+POST   /api/leaves/{id}/action/
+
+7.3 Manager
+
+GET /api/manager-queue/
+GET /api/manager-stats/
+
+
+⸻
+
+🔄 8. Core Workflows
+
+🟪 8.1 Leave Creation
+	1.	Employee submits leave
+	2.	LeaveRequest created
+	3.	Audit log entry added
+	4.	Email notification sent
+	5.	Webhook triggered
+
+🟧 8.2 Leave Approval
+	1.	Manager performs action
+	2.	Status updated
+	3.	Audit entry recorded
+	4.	Email notification sent
+	5.	Webhook triggered
+
+⸻
+
+🧪 9. Testing
+
+Run backend tests:
+
 cd backend
-python3 manage.py test
-```
+python3.manage.py test
 
-**Test Coverage:**
-- 16 tests total
-- Leave creation workflow
-- Approval/rejection flows
-- Permissions
-- Audit trails
-- Webhooks
+Tests include:
+	1.	Permission testing
+	2.	Leave creation
+	3.	Approval flow
+	4.	Audit logs
+	5.	Webhooks
 
----
+⸻
 
-##  Database Schema
+🗄️ 10. Database Schema
 
-```
-CustomUser
-├── id, username, email, role
+CustomUser (role, email, username)
+LeaveType (name, allowed_days)
+LeaveRequest (user, type, dates, reason, status)
+LeaveAuditLog (leave, action, old_status, new_status)
+Webhook (event_type, url, secret)
+WebhookDelivery (payload, response_status)
 
-LeaveType
-├── id, name, days_allowed
 
-LeaveRequest
-├── id, user_id, leave_type_id
-├── start_date, end_date, reason
-├── status, manager_comment
-└── created_at, updated_at
+⸻
 
-LeaveAuditLog
-├── id, leave_id, action_by_id
-├── action, previous_status, new_status
-├── comment, timestamp
+🎨 11. Frontend Pages
 
-Webhook
-├── id, webhook_id, event_type
-├── payload, response_status
-└── success, delivered_at
-```
+Page	Route	Role
+Login	/login	All
+Signup	/signup	All
+Employee Dashboard	/employee	Employee
+Create Leave	/create-leave	Employee
+Manager Dashboard	/manager	Manager
+Manager Queue	/manager-queue	Manager
+HR Dashboard	/hr	HR
 
----
 
-##  Frontend Pages
+⸻
 
-| Page | Route | Role | Description |
-|------|-------|------|-------------|
-| Login | `/login` | All | User login |
-| Signup | `/signup` | All | Registration |
-| Employee Dashboard | `/employee` | Employee | View own leaves |
-| Create Leave | `/create-leave` | Employee | Request leave |
-| Manager Dashboard | `/manager` | Manager | Overview |
-| Manager Queue | `/manager-queue` | Manager | Approve/reject |
-| HR Dashboard | `/hr` | HR | All leaves |
+📬 12. Email Events
+	1.	Leave created → Employee + Manager
+	2.	Leave approved → Employee
+	3.	Leave rejected → Employee
 
----
+⸻
 
-##  Security Features
+🔐 13. Environment Variables (Production)
 
--  JWT authentication
--  Role-based access control
--  Object-level permissions
--  CSRF protection
--  CORS configuration
--  HMAC webhook signing
--  Password hashing (Django default)
-
----
-
-##  Environment Variables
-
-**Development:** No .env needed (uses defaults)
-
-**Production:**
-```bash
 DEBUG=False
-SECRET_KEY=<random-secret-key>
+SECRET_KEY=<your-secret-key>
 ALLOWED_HOSTS=yourdomain.com
 EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
 EMAIL_HOST_USER=your-email@gmail.com
 EMAIL_HOST_PASSWORD=your-app-password
-```
 
 
+⸻
 
-##  Common Issues & Solutions
+📦 14. Deployment Checklist
+	1.	DEBUG=False
+	2.	SECRET_KEY configured
+	3.	ALLOWED_HOSTS updated
+	4.	SMTP email set up
+	5.	Migrations applied
+	6.	Superuser created
+	7.	Frontend build generated
+	8.	Gunicorn/uWSGI configured
+	9.	Nginx + HTTPS enabled
 
-### Issue: "Module not found"
-**Solution:** Install dependencies
-```bash
-cd backend && pip install -r requirements.txt
-cd frontend && npm install
-```
+⸻
 
-### Issue: "Database is locked"
-**Solution:** Close other Django processes
-```bash
-pkill -f runserver
-```
+👤 15. Test Users
 
-### Issue: "CORS error"
-**Solution:** Check CORS_ALLOWED_ORIGINS in settings.py
-
-### Issue: "401 Unauthorized"
-**Solution:** Check JWT token in localStorage
-
----
-
-##  Documentation Files
-
-- **TECHNICAL_DOCUMENTATION.md** - Complete technical guide (2000+ lines)
-- **README.md** - This file (quick reference)
-- **walkthrough.md** - Feature testing results
-
----
-
-##  Evaluation Points
-
-### Backend
- - Django models with relationships
- - REST API with DRF
- - JWT authentication
- -  Role-based permissions
- - Audit trail implementation
- - Email notifications
- - Webhook delivery system
- -  Comprehensive tests (16 tests)
-
-### Frontend
- React components
- Context API for state
- Protected routes
- API integration
- Responsive design
- Dark mode support
-
-### Features
- Complete CRUD operations
- Approval workflow
- Real-time notifications
- External integrations (webhooks)
- Security best practices
+Role	Username	Password
+Employee	testemployee	test123
+Manager	testmanager	test123
 
 
+⸻
 
-##  Deployment Checklistc
+📘 16. Documentation
+	•	TECHNICAL_DOCUMENTATION.md
+	•	walkthrough.md
+	•	README.md
 
-- [ ] Set DEBUG=False
-- [ ] Configure SECRET_KEY
-- [ ] Set ALLOWED_HOSTS
-- [ ] Configure email (SMTP)
-- [ ] Run migrations
-- [ ] Create superuser
-- [ ] Collect static files
-- [ ] Build frontend (npm run build)
-- [ ] Set up Gunicorn/uWSGI
-- [ ] Configure Nginx
-- [ ] Enable HTTPS
+⸻
 
-
-
-##  Support
-
-For detailed documentation, see **TECHNICAL_DOCUMENTATION.md**
-
-**Test Users:**
-- Username: `testemployee` / Password: `test123` (Employee)
-- Username: `testmanager` / Password: `test123` (Manager)
-
-
-
-##  License
+📄 17. License
 
 This project is for educational purposes.
 
-
-**Last Updated:** December 2025
-**Version:** 1.0.0
-# Leave-Management-System
-# Leave-Management-System
