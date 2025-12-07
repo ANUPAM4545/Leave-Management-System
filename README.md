@@ -8,7 +8,7 @@ A full-stack Leave Management System with role-based access control, audit trail
 
 
 
-## 🚀 How to Run the Servers
+##  How to Run the Servers
 
 You need to open **Two Separate Terminals** to run this project.
 
