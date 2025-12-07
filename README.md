@@ -16,10 +16,9 @@ You need to open **Two Separate Terminals** to run this project.
 This runs on port `8000`.
 
 ```bash
-# Open Terminal 1
-cd backend
-python3 -m pip install -r requirements.txt
-python3 manage.py migrate
+cd lms-project/backend
+pip install -r requirements.txt
+python3 manage.py createsuperuser
 python3 manage.py runserver
 ```
 
@@ -27,9 +26,7 @@ python3 manage.py runserver
 This runs on port `5173`.
 
 ```bash
-# Open Terminal 2
-cd frontend
-npm install
+cd lms-project/frontend
 npm run dev
 ```
 
