@@ -8,28 +8,35 @@ A full-stack Leave Management System with role-based access control, audit trail
 
 
 
-##  Quick Start
+## 🚀 How to Run the Servers
 
-### Backend Setup
+You need to open **Two Separate Terminals** to run this project.
+
+### 1. Start the Backend (Django)
+This runs on port `8000`.
+
 ```bash
+# Open Terminal 1
 cd backend
 python3 -m pip install -r requirements.txt
 python3 manage.py migrate
-python3 manage.py createsuperuser
 python3 manage.py runserver
 ```
 
-### Frontend Setup
+### 2. Start the Frontend (React)
+This runs on port `5173`.
+
 ```bash
+# Open Terminal 2
 cd frontend
 npm install
 npm run dev
 ```
 
-### Access
-- **Frontend**: http://localhost:5173/
-- **Backend API**: http://127.0.0.1:8000/
-- **Admin Panel**: http://127.0.0.1:8000/admin/
+### 3. Access the Project
+- **Main App**: [http://localhost:5173/](http://localhost:5173/)
+- **Backend API**: [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+- **Admin Panel**: [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/)
 
 ---
 
